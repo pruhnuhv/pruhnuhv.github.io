@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>pranav</title>
+    <link>http://pruhnuhv.github.io/</link>
+    <description>Recent content on pranav</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 29 May 2021 02:02:26 +0530</lastBuildDate><atom:link href="http://pruhnuhv.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Week 01</title>
+      <link>http://pruhnuhv.github.io/gsoc/week-01/</link>
+      <pubDate>Sat, 29 May 2021 02:02:26 +0530</pubDate>
+      
+      <guid>http://pruhnuhv.github.io/gsoc/week-01/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Google summer of code, 2021, Introduction</title>
+      <link>http://pruhnuhv.github.io/gsoc/gsoc-introduction/</link>
+      <pubDate>Sat, 29 May 2021 00:20:47 +0530</pubDate>
+      
+      <guid>http://pruhnuhv.github.io/gsoc/gsoc-introduction/</guid>
+      <description> GSoC at RTEMS  Improving The Rapsberry Pi BSP:  RTEMS Project already supports the Raspberry Pi 1, My project over the summer aims to add support for the Raspberry Pi Zero, Pi Zero W and the Raspberry Pi 3. This would include the basic Board Support Package (BSP), including but not limited to Interrupts, Clock Tick, UART, I2C, SPI, etc. Mentors: Chris Johns, Alan Cudmore, Kinsey Moore. </description>
+    </item>
+    
+  </channel>
+</rss>
