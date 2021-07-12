@@ -1,0 +1,70 @@
+---
+title: "Testing - GPIO"
+date: 2021-07-03T02:02:26+05:30
+draft: true
+---
+
+<b>RKI :</b>
+I thought of writing RTEMS test applications from scratch, but thankfully, Alan suggested using his RTEMS Kernel Image ([RKi](https://github.com/pruhnuhv/rki2)) project repository for the same. It is a really handy basic framework that provides an option to create custom commands, pass parameters, get user inputs and is very useful for this kind of testing.
+
+<b>The Test :</b>
+Testing the polled I/O was pretty straightforward using a bunch of LEDs and switches. I connected LEDs to GPIO 22 and GPIO 3 and a switch to GPIO 20 using a breadboard and some jumper cables and resistors. One test covered everything right from blinking the LEDs alternately followed by halting the program and waiting for a switch to be pressed which would switch on the LEDs and terminate the program. I also wrote separate functions that could be called via RKi shell commands for a more 'tracing' kind of an approach towards the test. These functions included initializing the GPIO pins, turning them on or off and also finally releasing them.
+
+<b>Where's the Bank? :</b>
+After Testing the physical GPIO pins, I though of additionally testing the Activity LED that is present on the Raspberry Pi (GPIO 47). However, I wasn't able to initialize this GPIO pin!
+I added another loop to my main GPIO test that would Initialize each Raspberry Pi GPIO pin as an Output and Input and return errors for the ones that couldn't be initialized. Aaand, No surprises, any of the pins from 32-53 couldn't be initialized.
+A simple look at the include/bsp.h file for the BSP showed that the GPIO pin count is defined as 32. Now, on going through the BCM2835/6/7 docs I realised that although the Pi Boards have only 17 physically accessible GPIO pins onboard, they have a total of 54 (0-53) GPIO pins that can be accessed, mapped, remapped and used for multiple functions by programs. Henceforth, we'll call the Pins from 0-31 as the First bank of Pins and the Pins from 32-53 as the second bank of pins. The RTEMS Api supports only 32 pins in a bank so I had no option but to add another bank of GPIO registers and so I changed the 'BSP GPIO count' define to 54.
+
+<b>How the GPIO works:</b>
+Some context on how the GPIO pins on these Broadcom boards are divided: 
+The GPIO base register exists at 0x20200000 along with 6 Function select registers to define the functions of the 54 GPIO Registers onboard. The GPFSEL0 is meant for the GPIO pins 0-9, and so on. Correspondingly, to access the second bank, we require the GPFSEL 3,4,5 registers which define the functions of the GPIO pins 30-39, 40-49 and 50-53 respectively. Here, each pin has 3 dedicated bits for us to work with on the 32 bit (with 2 reserved bits) GPIO Function select registers. Setting these 3 bits to 000 would mean that the corresponding GPIO Pin is an input and 001 would mean that it is an output, 010 and ahead is used to define alternate functions. So, to set the GPIO Pin 47 as an output, we need to modify the 23-21 bits on GPFSEL 4 to 001.
+Once we've selected and assigned the appropriate functions to our GPIO pins, there's all the other registers like GPSET, GPCLR, GPAFEN, etc for setting a pin, clearing a pin, and interacting with interrupts, etc. Since these registers are 32 bit too, there's separate registers to perform the same operation on first and second bank pins. As an example, to set the GPIO 15 pin, we have to set the 15th bit on the GPFSET0 register, while, to set the GPIO 47 pin we have to set the 15th (47-32) bit on the GPSET1 register.
+
+<b>Patching the issues:</b>
+Now, coming back to the issue at hand, first of all I added all the corresponding defines to the include/bsp/raspberrypi.h, like:
+```
+ #define BCM2835_GPIO_GPSET0      (BCM2835_GPIO_REGS_BASE + 0x1C)
++#define BCM2835_GPIO_GPSET1      (BCM2835_GPIO_REGS_BASE + 0x20)
+```
+(In retrospect, this approach was pretty tedious and dumb.)
+
+Then, to ensure that the second bank pins get initialized in their appropriate GPFSEL registers, I made a few tweaks to the gpio/rpi-gpio.c code:
+
+```
+   /* Calculate the pin function select register address. */
++  uint32_t pin_new = pin;
++  if (bank == 1) pin_new = pin + 32;
+   volatile uint32_t *pin_addr = (uint32_t *) BCM2835_GPIO_REGS_BASE +
+-                                             (pin / 10);
++                                           (pin_new / 10);
+ ```
+The value of the 'pin' being passed to this function was being determined by the original pin number % 32, ie. the index of the pin in it's bank, hence the 'if statement'.
+Given that the GPFSEL registers were all 32 bit registers stacked one after the other, there wasn't much headache addressing the additional registers.
+
+Now, for each of the registers that directly interacted with the pin, I had to change the register that was being modified according to the bank hence, for example for the 'set' register, I changed the code from:
+
+```
+rtems_status_code rtems_gpio_bsp_set(uint32_t bank, uint32_t pin)
+{
+  BCM2835_REG(BCM2835_GPIO_GPSET0) = (1 << pin);
+  return RTEMS_SUCCESSFUL;
+}
+```
+to this:
+```
+
+rtems_status_code rtems_gpio_bsp_set(uint32_t bank, uint32_t pin)
+{
+  if (bank == 1) {
+    BCM2835_REG(BCM2835_GPIO_GPSET1) = (1 << pin);
+  }
+  else {
+    BCM2835_REG(BCM2835_GPIO_GPSET0) = (1 << pin);
+  }
+  return RTEMS_SUCCESSFUL;
+}
+```
+Again, this was a very bad approach to this problem. The rather simple pre-existing GPIO code now had a lot of if-else's, and the mentors weren't keen on making such changes to the BSP code for rather trivial purposes given that the Activity LED was the only useful thing we could see in the second bank as most other registers were internal/reserved/had an alternate in the first bank itself.
+
+Well, more on this in the next Blog!
+

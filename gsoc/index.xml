@@ -6,7 +6,17 @@
     <description>Recent content in Gsoc on pranav</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 30 Jun 2021 00:00:50 +0530</lastBuildDate><atom:link href="http://pruhnuhv.github.io/gsoc/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 03 Jul 2021 02:02:26 +0530</lastBuildDate><atom:link href="http://pruhnuhv.github.io/gsoc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Testing - GPIO</title>
+      <link>http://pruhnuhv.github.io/gsoc/testing-gpio/</link>
+      <pubDate>Sat, 03 Jul 2021 02:02:26 +0530</pubDate>
+      
+      <guid>http://pruhnuhv.github.io/gsoc/testing-gpio/</guid>
+      <description>RKI : I thought of writing RTEMS test applications from scratch, but thankfully, Alan suggested using his RTEMS Kernel Image (RKi) project repository for the same. It is a really handy basic framework that provides an option to create custom commands, pass parameters, get user inputs and is very useful for this kind of testing.
+The Test : Testing the polled I/O was pretty straightforward using a bunch of LEDs and switches.</description>
+    </item>
+    
     <item>
       <title>Waf And Autoconf</title>
       <link>http://pruhnuhv.github.io/gsoc/waf-and-autoconf/</link>
