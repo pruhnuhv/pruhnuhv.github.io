@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="generator" content="Hugo 0.83.1" />
+		<title>Testing - GPIO II - pranav</title>
+
+		<meta name="description" content="RECAP:  The if&hellip;else blocks were just turning out to be a tedious, and not so optimal way of going about the task at hand. My main task right now was to write a patch for the second bank of GPIO pins, in such a way that I do not add a whole lot of extra complexity to the existing GPIO code of the RPi BSP(s).
+ The PATCH:  When the pin was on the second bank, the effective pin number reflecting would be it&rsquo;s overhead from 32.">
+
+
+		
+	
+		
+
+
+
+
+<link rel="stylesheet" href="/css/ui.css">
+
+	
+		
+
+		<link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway">
+
+		
+	</head>
+
+<body>
+<header class="container no-print">
+	<div class="u-header">
+		<nav class="bar">
+	<ul><li>
+			<a href="/">
+				<img class="icon-text" src="/img/prev.svg"/>
+			</a>
+		</li><li><a href="/about">About</a></li><li><a href="/gsoc">GSoC</a></li></ul>
+</nav>
+
+	</div>
+</header>
+<main class="container">
+
+<article>
+	<header><hgroup id="brand">
+	<h1>Testing - GPIO II</h1>
+	<h5>
+		
+		<time datetime="2021-07-11 02:02:26 &#43;0530 IST">Jul 11, 2021</time>
+		<span class="no-print">
+			<span>
+	</h5>
+	
+</hgroup>
+<hr class="sep" />
+</header>
+	<p><b> RECAP: </b>
+The if&hellip;else blocks were just turning out to be a tedious, and not so optimal way of going about the task at hand.
+My main task right now was to write a patch for the second bank of GPIO pins, in such a way that I do not add a whole lot of extra complexity to the existing GPIO code of the RPi BSP(s).</p>
+<p><b> The PATCH: </b>
+When the pin was on the second bank, the effective pin number reflecting would be it&rsquo;s overhead from 32. ie. pin-32.
+Hence, the better way to go about was:</p>
+<pre><code>volatile uint32_t *pin_addr = (uint32_t *) BCM2835_GPIO_REGS_BASE +
+-                                             (pin / 10);
++                                           ((pin+bank*32) / 10);
+</code></pre><p>so for example, for pin number 43 (ie. bank 1), the &lsquo;pin&rsquo; variable being passed to the function would&rsquo;ve been 11 (ie. 43-32), so while calculating the corresponding register&rsquo;s offset from the Base, we add 32 to the &lsquo;pin&rsquo; variable (since bank = 1). (Refer to the &lsquo;How the GPIO works&rsquo; section on the previous blog for more details)</p>
+<p>Well, the next thing at hand was tackling these 32 bit registers for each function associated with the GPIO. Each of these 32 bit GPIO function registers were in pairs, one corresponding to pins in the first bank and the other to the second bank.
+These register&rsquo;s have a common macro defined in the raspberrypi header file:</p>
+<pre><code>#define BCM2835_REG(x)           (*(volatile uint32_t *)(x))
+</code></pre><p>This meant that, if I were to separately define each of the second bank function registers, I&rsquo;d have to forcibly use if&hellip;else blocks. Ugh.</p>
+<p>Again, a quick look at the datasheet, and as expected, these 32 bit function register &lsquo;pairs&rsquo; were stacked one after the other. So, if the GPSET0 was present at (BASE + 0x1C), the GPSET1 would be present at (BASE + 0x20), more importantly, it is (BASE + 0x1C + 0x4). That&rsquo;s right! so, GPSETn would be at (BASE + 0x1C + 0x4*n). Using this knowledge, I modified all the GPIO registers in the header file. It looked something like:</p>
+<pre><code>-#define BCM2835_GPIO_GPSET0      (BCM2835_GPIO_REGS_BASE + 0x1C)
+-#define BCM2835_GPIO_GPCLR0      (BCM2835_GPIO_REGS_BASE + 0x28)
+-#define BCM2835_GPIO_GPLEV0      (BCM2835_GPIO_REGS_BASE + 0x34)
+-#define BCM2835_GPIO_GPEDS0      (BCM2835_GPIO_REGS_BASE + 0x40)
+-#define BCM2835_GPIO_GPREN0      (BCM2835_GPIO_REGS_BASE + 0x4C)
+-#define BCM2835_GPIO_GPFEN0      (BCM2835_GPIO_REGS_BASE + 0x58)
+-#define BCM2835_GPIO_GPHEN0      (BCM2835_GPIO_REGS_BASE + 0x64)
+-#define BCM2835_GPIO_GPLEN0      (BCM2835_GPIO_REGS_BASE + 0x70)
+-#define BCM2835_GPIO_GPAREN0     (BCM2835_GPIO_REGS_BASE + 0x7C)
+-#define BCM2835_GPIO_GPAFEN0     (BCM2835_GPIO_REGS_BASE + 0x88)
+-#define BCM2835_GPIO_GPPUD       (BCM2835_GPIO_REGS_BASE + 0x94)
+-#define BCM2835_GPIO_GPPUDCLK0   (BCM2835_GPIO_REGS_BASE + 0x98)
++#define BCM2835_GPIO_GPSET(_bank)    (BCM2835_GPIO_REGS_BASE + 0x1C + 0x4*_bank)
++#define BCM2835_GPIO_GPCLR(_bank)    (BCM2835_GPIO_REGS_BASE + 0x28 + 0x4*_bank)
++#define BCM2835_GPIO_GPLEV(_bank)    (BCM2835_GPIO_REGS_BASE + 0x34 + 0x4*_bank)
++#define BCM2835_GPIO_GPEDS(_bank)    (BCM2835_GPIO_REGS_BASE + 0x40 + 0x4*_bank)
++#define BCM2835_GPIO_GPREN(_bank)    (BCM2835_GPIO_REGS_BASE + 0x4C + 0x4*_bank)
++#define BCM2835_GPIO_GPFEN(_bank)    (BCM2835_GPIO_REGS_BASE + 0x58 + 0x4*_bank)
++#define BCM2835_GPIO_GPHEN(_bank)    (BCM2835_GPIO_REGS_BASE + 0x64 + 0x4*_bank)
++#define BCM2835_GPIO_GPLEN(_bank)    (BCM2835_GPIO_REGS_BASE + 0x70 + 0x4*_bank)
++#define BCM2835_GPIO_GPAREN(_bank)   (BCM2835_GPIO_REGS_BASE + 0x7C + 0x4*_bank)
++#define BCM2835_GPIO_GPAFEN(_bank)   (BCM2835_GPIO_REGS_BASE + 0x88 + 0x4*_bank)
++#define BCM2835_GPIO_GPPUDCLK(_bank) (BCM2835_GPIO_REGS_BASE + 0x98 + 0x4*_bank)
++#define BCM2835_GPIO_GPPUD           (BCM2835_GPIO_REGS_BASE + 0x94)
+</code></pre><p>And now, with these changes, making changes to the existing GPIO code got easier too. Moreover, the code consequently becomes more easily readable too.
+All of the function definitions just changed in a similar manner to this:</p>
+<pre><code> rtems_status_code rtems_gpio_bsp_set(uint32_t bank, uint32_t pin)
+ {
+- BCM2835_REG(BCM2835_GPIO_GPSET0) = (1 &lt;&lt; pin);
++ BCM2835_REG(BCM2835_GPIO_GPSET(bank)) = (1&lt;&lt;pin);
+ 
+  return RTEMS_SUCCESSFUL;
+ }
+</code></pre><p>Thus, The patch for GPIO was ready, and I used the previously written tests for the same, and Great! It worked!</p>
+
+</article>
+<nav class="no-print post-nav">
+
+	<a class="prev-post" href="http://pruhnuhv.github.io/gsoc/testing-gpio/">
+		<img class="icon-text" src="/img/prev.svg"/>Testing - GPIO</a>
+
+
+</nav>
+
+
+
+
+
+			<hr class="sep" />
+		</main>
+		<footer class="container no-print">
+			<div class="u-footer">
+				
+<a href="mailto:dangipranav@gmail.com"><img class="icon-social" src="/img/email.svg" alt="Email Me!"/></a>
+
+
+<a href="https://github.com/pruhnuhv/"><img class="icon-social" src="/img/github.svg" alt="Github"/></a>
+
+
+<a href="https://twitter.com/willkwordyou"><img class="icon-social" src="/img/twitter.svg" alt="Twitter"/></a>
+
+
+
+				<p>
+					
+					<a href="#brand">
+						<img class="icon-text" src="/img/toup.svg" alt="Back To Top"/>
+						<span>Back to Top</span>
+					</a>
+					
+				</p>
+			</div>
+		</footer>
+		
+	</body>
+</html>
+

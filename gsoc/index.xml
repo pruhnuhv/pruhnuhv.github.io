@@ -6,7 +6,17 @@
     <description>Recent content in Gsoc on pranav</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 03 Jul 2021 02:02:26 +0530</lastBuildDate><atom:link href="http://pruhnuhv.github.io/gsoc/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 11 Jul 2021 02:02:26 +0530</lastBuildDate><atom:link href="http://pruhnuhv.github.io/gsoc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Testing - GPIO II</title>
+      <link>http://pruhnuhv.github.io/gsoc/gpio-2/</link>
+      <pubDate>Sun, 11 Jul 2021 02:02:26 +0530</pubDate>
+      
+      <guid>http://pruhnuhv.github.io/gsoc/gpio-2/</guid>
+      <description>RECAP:  The if&amp;hellip;else blocks were just turning out to be a tedious, and not so optimal way of going about the task at hand. My main task right now was to write a patch for the second bank of GPIO pins, in such a way that I do not add a whole lot of extra complexity to the existing GPIO code of the RPi BSP(s).
+ The PATCH:  When the pin was on the second bank, the effective pin number reflecting would be it&amp;rsquo;s overhead from 32.</description>
+    </item>
+    
     <item>
       <title>Testing - GPIO</title>
       <link>http://pruhnuhv.github.io/gsoc/testing-gpio/</link>
