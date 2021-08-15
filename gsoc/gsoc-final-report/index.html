@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="generator" content="Hugo 0.83.1" />
+		<title>GSoC. - pranav</title>
+
+		<meta name="description" content="GSoC Conclusion : So, GSoC&#39;21 officially kicked off on the 7th of June, and the coding period, and consequently the GSoC comes to an end today, on the 16th of August. This blog aims to be a report on all that has happened since.
+The Raspberry Pi BSP  Before :
+  The RTEMS 5 branch boots up on a couple of models. SMP doesn&rsquo;t work at all.
+  RTEMS 6 branch doesn&rsquo;t boot up on any model.">
+
+
+		
+	
+		
+
+
+
+
+<link rel="stylesheet" href="/css/ui.css">
+
+	
+		
+
+		<link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway">
+
+		
+	</head>
+
+<body>
+<header class="container no-print">
+	<div class="u-header">
+		<nav class="bar">
+	<ul><li>
+			<a href="/">
+				<img class="icon-text" src="/img/prev.svg"/>
+			</a>
+		</li><li><a href="/about">About</a></li><li><a href="/gsoc">GSoC</a></li></ul>
+</nav>
+
+	</div>
+</header>
+<main class="container">
+
+<article>
+	<header><hgroup id="brand">
+	<h1>GSoC.</h1>
+	<h5>
+		
+		<time datetime="2021-08-16 02:02:26 &#43;0530 IST">Aug 16, 2021</time>
+		<span class="no-print">
+			<span>
+	</h5>
+	
+</hgroup>
+<hr class="sep" />
+</header>
+	<p><b>GSoC Conclusion :</b>
+So, GSoC'21 officially kicked off on the 7th of June, and the coding period, and consequently the GSoC comes to an end today, on the 16th of August.
+This blog aims to be a report on all that has happened since.</p>
+<h1><u>The Raspberry Pi BSP </u></h1>
+<p><b>Before :</b></p>
+<ul>
+<li>
+<p>The RTEMS 5 branch boots up on a couple of models. SMP doesn&rsquo;t work at all.</p>
+</li>
+<li>
+<p>RTEMS 6 branch doesn&rsquo;t boot up on any model.</p>
+</li>
+<li>
+<p>No idea about the config/firmware to be used, can&rsquo;t test peripherals on this branch.</p>
+</li>
+</ul>
+<p><b>Current State :</b></p>
+<ul>
+<li>
+<p>The RTEMS 5 and 6 branches boot up on all the models except the Pi 4.</p>
+</li>
+<li>
+<p>SMP works.</p>
+</li>
+<li>
+<p>Support for SPI, I2C and the GPIO pins are tested. We also know the limitations and have example drivers for the same.</p>
+</li>
+</ul>
+<h2> Startup Issues :</h2>
+<p>The BSP not booting up had more than one aspect to it, that we later realised.</p>
+<p>The configurations in the config.txt file, the fix for which we&rsquo;ve added to Docs.</p>
+<p>The correct firmware version, which has been updated in the Docs as well.</p>
+<p>The issues with the ARMv6 Board specific Startup code, the patch for which has been applied <a href="https://github.com/pruhnuhv/rki2/tree/rtems6/build/rpi/src">here.</a></p>
+<p>The yaml files for FDT support missing, which were causing problems with the waf build. The patch for which has been applied <a href="https://github.com/pruhnuhv/rtems/commit/c71e34bee0d6bf47c743fd390cc2f420c67b49ff">here.</a></p>
+<h2> GPIO :</h2>
+<p>We tested the GPIO using some LEDs and switches. The GPIO on the BSP works fine. We had a tentative patch for the GPIO code to add some small functionalities, but we have decided against applying that patch, more details about the same can be found in the GPIO blogs. The polled and interrupt driven tests that we used can be found in the <code>gpio_cmd</code> and <code>gpio_irq_cmd</code> files <a href="https://github.com/pruhnuhv/rki2/tree/rtems6/build/rpi/src">here</a></p>
+<h2> I2C :</h2>
+<p>We tested I2C on the BSP using a BMP280 Temperature sensor. The I2C works fine. The drivers and the application that we wrote can be found in the <code>drivers/BMP280</code> and <code>bmp280_cmd</code> files <a href="https://github.com/pruhnuhv/rki2/tree/rtems6/build/rpi/src">here</a></p>
+<h2> SPI :</h2>
+<p>We tested SPI on the BSP using a BMP280 Temperature sensor. The SPI works fine too. The drivers and the application that we wrote can be found in the <code>drivers/BMP280-SPI</code> and <code>bmp280_spi_cmd</code> files <a href="https://github.com/pruhnuhv/rki2/tree/rtems6/build/rpi/src">here</a></p>
+<h2> SMP :</h2>
+<p>The SMP not working can be attributed to changes to the firmware from the bcm/rpi that the users are not aware about. A simple one line patch to the SMP code got the SMP working again. The patch can be found here.</p>
+<h2><b> Further Work :</b></h2>
+<p>The Raspberry Pi BSPs are now in a pretty good shape. Further, work is to to be done on adding support for the Pi 4 as well as Adding Libbsd support for the BSP.</p>
+
+</article>
+<nav class="no-print post-nav">
+
+	<a class="prev-post" href="http://pruhnuhv.github.io/gsoc/testing-spi/">
+		<img class="icon-text" src="/img/prev.svg"/>Testing - SPI</a>
+
+
+</nav>
+
+
+
+
+
+			<hr class="sep" />
+		</main>
+		<footer class="container no-print">
+			<div class="u-footer">
+				
+<a href="mailto:dangipranav@gmail.com"><img class="icon-social" src="/img/email.svg" alt="Email Me!"/></a>
+
+
+<a href="https://github.com/pruhnuhv/"><img class="icon-social" src="/img/github.svg" alt="Github"/></a>
+
+
+<a href="https://twitter.com/willkwordyou"><img class="icon-social" src="/img/twitter.svg" alt="Twitter"/></a>
+
+
+
+				<p>
+					
+					<a href="#brand">
+						<img class="icon-text" src="/img/toup.svg" alt="Back To Top"/>
+						<span>Back to Top</span>
+					</a>
+					
+				</p>
+			</div>
+		</footer>
+		
+	</body>
+</html>
+

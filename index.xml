@@ -6,7 +6,19 @@
     <description>Recent content on pranav</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 10 Aug 2021 00:00:10 +0530</lastBuildDate><atom:link href="http://pruhnuhv.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 16 Aug 2021 02:02:26 +0530</lastBuildDate><atom:link href="http://pruhnuhv.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GSoC.</title>
+      <link>http://pruhnuhv.github.io/gsoc/gsoc-final-report/</link>
+      <pubDate>Mon, 16 Aug 2021 02:02:26 +0530</pubDate>
+      
+      <guid>http://pruhnuhv.github.io/gsoc/gsoc-final-report/</guid>
+      <description>GSoC Conclusion : So, GSoC&#39;21 officially kicked off on the 7th of June, and the coding period, and consequently the GSoC comes to an end today, on the 16th of August. This blog aims to be a report on all that has happened since.
+The Raspberry Pi BSP  Before :
+  The RTEMS 5 branch boots up on a couple of models. SMP doesn&amp;rsquo;t work at all.
+  RTEMS 6 branch doesn&amp;rsquo;t boot up on any model.</description>
+    </item>
+    
     <item>
       <title>Testing - SPI</title>
       <link>http://pruhnuhv.github.io/gsoc/testing-spi/</link>
@@ -25,7 +37,7 @@ The Driver : In our driver, like we did for the I2C driver, we first define the 
       <guid>http://pruhnuhv.github.io/gsoc/testing-i2c/</guid>
       <description>RTEMS libi2c : RTEMS provides a standard API to I2C or SPI based drivers. So my driver for the BMP280 as well as the corresponding test is based upon this libi2c API.
  BMP280 : BMP280 is a widely available Temperature and Pressure sensor, typically used with Arduinos and Raspberry Pi&amp;rsquo;s, hence there is a lot of support and documentation for the same.
-The Driver : In our driver, we initially define the read and write functions to interact with the driver.</description>
+The Driver : In our driver, we initially define the read and write functions to interact with the sensor.</description>
     </item>
     
     <item>

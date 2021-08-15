@@ -11,7 +11,7 @@ RTEMS provides a standard API to I2C or SPI based drivers. So my driver for the 
 BMP280 is a widely available Temperature and Pressure sensor, typically used with Arduinos and Raspberry Pi's, hence there is a lot of support and documentation for the same.
 
 <b>The Driver :</b>
-In our driver, we initially define the read and write functions to interact with the driver. The `i2c_bus_transfer` function from the RTEMS i2c library, takes the bus control, the messages to transfer along with a count of the number of messsages* being transferred. Here our R/W functions are primarily reading/writing only one byte at a time. (* One message here is one complete transfer of n bytes) 
+In our driver, we initially define the read and write functions to interact with the sensor. The `i2c_bus_transfer` function from the RTEMS i2c library, takes the bus control, the messages to transfer along with a count of the number of messsages* being transferred. Here our R/W functions are primarily reading/writing only one byte at a time. (* One message here is one complete transfer of n bytes) 
 
 The I2C Write function of our driver according to the BMP280 datasheet, requires a pair of bytes, ie. the control byte (register address), and a data byte to be transferred, as is standard. Hence we implement this function by passing the appropriate i2c_msg transfer message of length 2 to the `i2c_bus_transfer` function.
 
