@@ -6,7 +6,28 @@
     <description>Recent content on pranav</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 11 Jul 2021 02:02:26 +0530</lastBuildDate><atom:link href="http://pruhnuhv.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 10 Aug 2021 00:00:10 +0530</lastBuildDate><atom:link href="http://pruhnuhv.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Testing - SPI</title>
+      <link>http://pruhnuhv.github.io/gsoc/testing-spi/</link>
+      <pubDate>Tue, 10 Aug 2021 00:00:10 +0530</pubDate>
+      
+      <guid>http://pruhnuhv.github.io/gsoc/testing-spi/</guid>
+      <description>RTEMS libi2c : The RTEMS libi2c API also supports SPI devices, the SPI on the raspberry Pi BSP is based on this libi2c API instead of the separate /dev/spi API that is used in a few other RTEMS BSPs.
+The Driver : In our driver, like we did for the I2C driver, we first define the read and write functions to interact with the sensor. According to the datasheet, writing is done by lowering the CSB and sending control bytes and register data pairs.</description>
+    </item>
+    
+    <item>
+      <title>Testing - I2C</title>
+      <link>http://pruhnuhv.github.io/gsoc/testing-i2c/</link>
+      <pubDate>Sun, 25 Jul 2021 00:02:20 +0530</pubDate>
+      
+      <guid>http://pruhnuhv.github.io/gsoc/testing-i2c/</guid>
+      <description>RTEMS libi2c : RTEMS provides a standard API to I2C or SPI based drivers. So my driver for the BMP280 as well as the corresponding test is based upon this libi2c API.
+ BMP280 : BMP280 is a widely available Temperature and Pressure sensor, typically used with Arduinos and Raspberry Pi&amp;rsquo;s, hence there is a lot of support and documentation for the same.
+The Driver : In our driver, we initially define the read and write functions to interact with the driver.</description>
+    </item>
+    
     <item>
       <title>Testing - GPIO II</title>
       <link>http://pruhnuhv.github.io/gsoc/gpio-2/</link>
