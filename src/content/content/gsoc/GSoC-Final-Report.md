@@ -66,7 +66,7 @@ We tested SPI on the BSP using a BMP280 Temperature sensor. The SPI works fine t
 <h2> SMP :</h2>
 
 
-The SMP not working can be attributed to changes to the firmware from the bcm/rpi that the users are not aware about. A simple one line patch to the SMP code got the SMP working again. The patch can be found here.
+The SMP not working can be attributed to changes to the firmware from the bcm/rpi that the users are not aware about. A simple one line patch to the SMP code got the SMP working again. The patch can be found [here](https://github.com/pruhnuhv/rtems/commit/1c0606819666241b5f9d6470a3f11813a6feddb8)
 
 
 <h2><b> Further Work :</b></h2>
