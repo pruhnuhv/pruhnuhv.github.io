@@ -6,7 +6,7 @@
     <description>Recent content on pranav</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 16 Aug 2021 02:02:26 +0530</lastBuildDate><atom:link href="http://pruhnuhv.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 Feb 2023 02:22:46 +0530</lastBuildDate><atom:link href="http://pruhnuhv.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>GSoC.</title>
       <link>http://pruhnuhv.github.io/gsoc/gsoc-final-report/</link>
@@ -86,7 +86,8 @@ Initial Hiccups: I started off trying to build the RTEMS 6 (henceforth referred 
       <pubDate>Sat, 29 May 2021 00:20:47 +0530</pubDate>
       
       <guid>http://pruhnuhv.github.io/gsoc/gsoc-introduction/</guid>
-      <description> GSoC at RTEMS  Improving The Rapsberry Pi BSP:  RTEMS Project already supports the Raspberry Pi 1, My project over the summer aims to add support for the Raspberry Pi Zero, Pi Zero W and the Raspberry Pi 3. This would include the basic Board Support Package (BSP), including but not limited to Interrupts, Clock Tick, UART, I2C, SPI, etc. Mentors: Chris Johns, Alan Cudmore, Kinsey Moore. </description>
+      <description>The Next few posts are done as a series of posts detailing about my work in GSoC for RTEMS
+ GSoC at RTEMS  Improving The Rapsberry Pi BSP:  RTEMS Project already supports the Raspberry Pi 1, My project over the summer aims to add support for the Raspberry Pi Zero, Pi Zero W and the Raspberry Pi 3. This would include the basic Board Support Package (BSP), including but not limited to Interrupts, Clock Tick, UART, I2C, SPI, etc.</description>
     </item>
     
   </channel>

@@ -1,20 +1,27 @@
----
-title: "About"
-date: 2021-05-28T02:22:46+05:30
+﻿---
+title: "Pranav Dangi"
+date: 2023-02-26T02:22:46+05:30
 draft: true
 ---
-<p>
-<h3> Hey! </h3>
-I am Pranav (he/him/his), an Electrical and Electronics Engineering (EEE) undergraduate student at BITS Pilani, India, currently.
-I like tinkering with Hardware, Software and am probably stuck in some abstraction layer between the two right now. 
-</p>
-<p>
-<h3> Interests </h3>
-I like Embedded/Real-Time Systems, the Internet of Things(IoT), Reverse Engineering, FPGAs & Digital Design, among a lot of other things. I believe technology should be free and fair, so I am trying to use as well as contribute towards free and open source hardware/software. I strongly support Internet Freedom, Digital Rights and like reading up about the same. I like listening to Alt rock/Indie/Bollywood lo-fi music. I also watch and play cricket. 
-</p>
-<p>
-<h3> Projects </h3>
 
-* Google Summer Of Code (GSoC'21) at Real Time Executive For Multiprocessor Systems (RTEMS)
-* Embedded Systems R&D Intern at Nihon Communication Solutions, Bangalore.
+<p>
+
+I am a student working with Prof. [Tulika Mitra](https://www.comp.nus.edu.sg/~tulika/). 
+(As of 2023) I'm completing my Undergraduate Studies in Electrical and Electronics Engineering (EEE, or Triple E). 
+
+I like Computer Architecture, VLSI Design, Circuits, Compilers and everything in between. 
+As a part of Research Projects during my Undergrad and consequently my Undergraduate Thesis I have worked on Decoupled Access-Execute and Programmable, Reconfigurable, Dataflow Architectures.
+I believe that Algorithms, Memory and Compute need to be co-designed to achieve high performance while still maintaining Energy Efficiency in the Post (?) Moore's Law era, especially for kernels with very irregular memory accesses (Sparse Tensor Algebra finds itself hitting the memory wall in every second GNN, Transformer or Scientific Computation). I like Open Source Hardware (although my Project for the last Free MPW Shuttle didn't workout, :/ sigh). 
+
+In my previous life I have worked as an Intern in the Interconnects IP Group at Intel, India and in the VLSI Design Group of Prof. [Abhijit Asati](https://www.bits-pilani.ac.in/Pilani/abhijitasati/Profile) at BITS Pilani, India.
+
+---
+
+I like learning about absolutely random things related to people, places and food. I love my share of Jazz and Alt-Rock on a few days and lo-fi Hindi music on the others. I often go into a recursive loop of questions about something and erratically maintain a blog. I have used 'I' 12 times on this page.  
+
+
+
+If you spot any errors on this page or want to get in touch, you can drop me a mail at [dangipranav@gmail.com](mailto:dangipranav@gmail.com)
+ 
+
 </p>
