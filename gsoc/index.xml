@@ -13,7 +13,7 @@
       <pubDate>Mon, 16 Aug 2021 02:02:26 +0530</pubDate>
       
       <guid>http://pruhnuhv.github.io/gsoc/gsoc-final-report/</guid>
-      <description>GSoC Conclusion : So, GSoC&#39;21 officially kicked off on the 7th of June, and the coding period, and consequently the GSoC comes to an end today, on the 16th of August. This blog aims to be a report on all that has happened since.
+      <description>GSoC Conclusion : GSoC&#39;21 officially kicked off on the 7th of June. The ideation, programming, mentorship, and consequently GSoC come to an end today, on the 16th of August. This blog aims to be a brief report on all that has happened since.
 The Raspberry Pi BSP  Before :
   The RTEMS 5 branch boots up on a couple of models. SMP doesn&amp;rsquo;t work at all.
   RTEMS 6 branch doesn&amp;rsquo;t boot up on any model.</description>

@@ -5,8 +5,8 @@ draft: true
 ---
 
 <b>GSoC Conclusion :</b>
-So, GSoC'21 officially kicked off on the 7th of June, and the coding period, and consequently the GSoC comes to an end today, on the 16th of August.
-This blog aims to be a report on all that has happened since.
+GSoC'21 officially kicked off on the 7th of June. The ideation, programming, mentorship, and consequently GSoC come to an end today, on the 16th of August.
+This blog aims to be a brief report on all that has happened since.
 
 <h1><u>The Raspberry Pi BSP </u></h1>
 
