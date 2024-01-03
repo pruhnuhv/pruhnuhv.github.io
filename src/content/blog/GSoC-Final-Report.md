@@ -1,5 +1,5 @@
 ---
-title: "GSoC."
+title: "GSoC"
 date: 2021-08-16T02:02:26+05:30
 draft: true
 ---
