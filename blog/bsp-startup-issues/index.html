@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="generator" content="Hugo 0.83.1" />
+		<title>BSP Startup issues - Pranav Dangi</title>
+
+		<meta name="description" content="Some context, to the blog post ahead:  It&rsquo;s been a week into the coding period of the GSoC&#39;21 at RTEMS, more than a week since I actually started working, and a few meets and emails have been exchanged with the mentors and the ever-so-helpful RTEMS community.
+Initial Hiccups: I started off trying to build the RTEMS 6 (henceforth referred to as Master) Raspberry Pi BSPs. There&rsquo;s two(rather, three) ways to build the BSPs.">
+
+
+		
+	
+		
+
+
+
+
+<link rel="stylesheet" href="/css/ui.css">
+
+	
+		
+
+		<link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway">
+
+		
+	</head>
+
+<body>
+<header class="container no-print">
+	<div class="u-header">
+		<nav class="bar">
+	<ul><li>
+			<a href="/">
+				<img class="icon-text" src="/img/prev.svg"/>
+			</a>
+		</li><li><a href="/about">About</a></li><li><a href="/blog">Blog</a></li></ul>
+</nav>
+
+	</div>
+</header>
+<main class="container">
+
+<article>
+	<header><hgroup id="brand">
+	<h1>BSP Startup issues</h1>
+	<h5>
+		
+		<time datetime="2021-06-15 02:02:26 &#43;0530 IST">Jun 15, 2021</time>
+		<span class="no-print">
+			<span>
+	</h5>
+	
+</hgroup>
+<hr class="sep" />
+</header>
+	<p><b>Some context, to the blog post ahead: </b>
+It&rsquo;s been a week into the coding period of the GSoC'21 at RTEMS, more than a week since I actually started working, and a few meets and emails have been exchanged with the mentors and the ever-so-helpful RTEMS community.</p>
+<p><b>Initial Hiccups:</b>
+I started off trying to build the RTEMS 6 (henceforth referred to as Master) Raspberry Pi BSPs. There&rsquo;s two(rather, three) ways to build the BSPs. You could use the RTEMS-Source-Builder(we&rsquo;ll call it the RSB), you can use the (although now inching towards it demise) Autoconf-make build (Refer the &lsquo;Manually Build a BSP&rsquo; section in the RTEMS 5 docs), and the 3rd option is the waf build. I wasn&rsquo;t able to build the Raspberry Pi BSPs using the first two, basically, the RSB/the Autoconf build failed, and being new to the entire RTEMS toolchain and directory structure, if I say that I wasn&rsquo;t intimidated by it, I&rsquo;d be lying, luckily for me, the waf build went through without a problem and so I ignored the first two builds failing. (More on this later)</p>
+<p>Sigh! The Rpi BSPs didn&rsquo;t boot on their respective hardware(s), A lot of SD card mount-unmount later, I moved to the RTEMS 5 BSPs to see if I could make them work.</p>
+<p><b>The SD card:</b>
+The SD card has the bootfiles necessary for the Pi to boot up, as the BSPs weren&rsquo;t even starting up, tftp was out of question at the moment. A look at the Rpi Docs will tell you that you need to get the bootcode.bin, start.elf (atleast these two), and the other files from the official <a href="https://github.com/raspberrypi/firmware/tree/master/boot">Raspberry Pi Repository</a>
+Additionally, we add a config.txt to use/modify the config parameters that will be used to set up the Pi.</p>
+<p><b>Bisecting:</b>
+Git bisect is an amazing tool to go through the commits to find the commit that broke the application. The RTEMS 5 Rpi BSPs were working with an older version of the official Rpi firmware but weren&rsquo;t working with the latest/master branch firmware. Hence, we were able to narrow it down to a certain <a href="https://github.com/raspberrypi/firmware/tree/1.20200601/boot">version</a> of the official firmware, after which the BSP doesn&rsquo;t boot. Without a JTAG/other appropriate debug options, I wasn&rsquo;t able to debug this problem and we decided on updating the docs to point to the older firmware instead of spending time debugging it (for now).</p>
+<p><b>What works, What doesn&rsquo;t:</b>
+So, the RTEMS 5 branch BSPs, now worked with the older firmware, the RTEMS 6 branch BSPs still don&rsquo;t work.</p>
+<p><b>What commit broke it, again:</b>
+Again, going through the commits, we could find the commit that broke the BSP!</p>
+<p>The Commit 272534eb725f2486b7a32b39d998202a101bd36e on the RTEMS 6 branch, removed the following statement from the bspstarthooks.c file and it had to be re-added to get the BSPs to work:</p>
+<pre><code> /* Clear Secure or Non-secure Vector Base Address Register */
+  arm_cp15_set_vector_base_address(bsp_vector_table_begin);
+</code></pre><p>An Important Thing to note here: To build this version of the BSP, we had to revert to an older version of the RSB (d3dc0bc3861362978cdf65725e4ba2b64e283d32).
+When we added the function from the commit that broke the BSP, back to the latest RTEMS master, we had to build the BSP using the waf build system, as the Build with the Autoconf Build System Failed.</p>
+
+</article>
+<nav class="no-print post-nav">
+
+	<a class="prev-post" href="http://pruhnuhv.github.io/blog/gsoc-introduction/">
+		<img class="icon-text" src="/img/prev.svg"/>Google summer of code, 2021, Introduction</a>
+
+
+	<a class="next-post" href="http://pruhnuhv.github.io/blog/waf-and-autoconf/">Waf And Autoconf<img class="icon-text" src="/img/next.svg"/>
+	</a>
+
+</nav>
+
+
+
+
+	
+
+<script src="https://utteranc.es/client.js"
+        repo=""
+        issue-term="url"
+        label=""
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+
+	<div id="disqus_thread" class="no-print"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = '';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+			<hr class="sep" />
+		</main>
+		<footer class="container no-print">
+			<div class="u-footer">
+				
+<a href="mailto:dangipranav@gmail.com"><img class="icon-social" src="/img/email.svg" alt="Email Me!"/></a>
+
+
+<a href="https://github.com/pruhnuhv/"><img class="icon-social" src="/img/github.svg" alt="Github"/></a>
+
+
+<a href="https://twitter.com/qwtfpd"><img class="icon-social" src="/img/twitter.svg" alt="Twitter"/></a>
+
+
+
+				<p>
+					
+					<a href="#brand">
+						<img class="icon-text" src="/img/toup.svg" alt="Back To Top"/>
+						<span>Back to Top</span>
+					</a>
+					
+				</p>
+			</div>
+		</footer>
+		
+	</body>
+</html>
+

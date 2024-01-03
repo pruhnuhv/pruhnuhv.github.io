@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="generator" content="Hugo 0.83.1" />
+		<title>Testing - I2C - Pranav Dangi</title>
+
+		<meta name="description" content="RTEMS libi2c : RTEMS provides a standard API to I2C or SPI based drivers. So my driver for the BMP280 as well as the corresponding test is based upon this libi2c API.
+ BMP280 : BMP280 is a widely available Temperature and Pressure sensor, typically used with Arduinos and Raspberry Pi&rsquo;s, hence there is a lot of support and documentation for the same.
+The Driver : In our driver, we initially define the read and write functions to interact with the sensor.">
+
+
+		
+	
+		
+
+
+
+
+<link rel="stylesheet" href="/css/ui.css">
+
+	
+		
+
+		<link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway">
+
+		
+	</head>
+
+<body>
+<header class="container no-print">
+	<div class="u-header">
+		<nav class="bar">
+	<ul><li>
+			<a href="/">
+				<img class="icon-text" src="/img/prev.svg"/>
+			</a>
+		</li><li><a href="/about">About</a></li><li><a href="/blog">Blog</a></li></ul>
+</nav>
+
+	</div>
+</header>
+<main class="container">
+
+<article>
+	<header><hgroup id="brand">
+	<h1>Testing - I2C</h1>
+	<h5>
+		
+		<time datetime="2021-07-25 00:02:20 &#43;0530 IST">Jul 25, 2021</time>
+		<span class="no-print">
+			<span>
+	</h5>
+	
+</hgroup>
+<hr class="sep" />
+</header>
+	<p><b>RTEMS libi2c :</b>
+RTEMS provides a standard API to I2C or SPI based drivers. So my driver for the BMP280 as well as the corresponding test is based upon this libi2c API.</p>
+<p><b> BMP280 :</b>
+BMP280 is a widely available Temperature and Pressure sensor, typically used with Arduinos and Raspberry Pi&rsquo;s, hence there is a lot of support and documentation for the same.</p>
+<p><b>The Driver :</b>
+In our driver, we initially define the read and write functions to interact with the sensor. The <code>i2c_bus_transfer</code> function from the RTEMS i2c library, takes the bus control, the messages to transfer along with a count of the number of messsages* being transferred. Here our R/W functions are primarily reading/writing only one byte at a time. (* One message here is one complete transfer of n bytes)</p>
+<p>The I2C Write function of our driver according to the BMP280 datasheet, requires a pair of bytes, ie. the control byte (register address), and a data byte to be transferred, as is standard. Hence we implement this function by passing the appropriate i2c_msg transfer message of length 2 to the <code>i2c_bus_transfer</code> function.</p>
+<pre><code>  i2c_msg msg = {
+    .addr = dev-&gt;address,
+    .flags = 0,
+    .len = 2,
+    .buf = content
+  };
+</code></pre><p>Similarly, the I2C Read function for the driver, again like standard, requires one complete message to be sent first with the control byte (register address), followed by another message, this time with the I2C_M_RD flag set, following which the slave sends out the data.</p>
+<pre><code>  i2c_msg msg[2] = {
+    {
+    .addr = dev-&gt;address,
+    .flags = 0,
+    .len = 1,
+    .buf = &amp;reg
+    },
+    {
+    .addr = dev-&gt;address,
+    .flags = I2C_M_RD,
+    .len = 1,
+    .buf = content
+    }
+  }
+</code></pre><p>Once The basic read and write functions are implemented, we just need to set the appropriate configuration as per use, followed by reading the Temperature and calibrating it according to the values returned from the corresponding registers as defined in the datasheet.</p>
+<p><b>Registering the Driver &amp; IOCTL :</b>
+Now, assuming you have gone through the code, skipping over the nitty-gritties of how the Temperature is being read and calibrated, we now move to registering the driver and implementing the IOCTL functionality for it. Libi2c provides us with <code>i2c_dev_alloc_and_init()</code> that allocates a device control from the heap and initializes it. Further we use this initialized device, and register it using <code>i2c_dev_register</code> and that completes our driver.</p>
+
+</article>
+<nav class="no-print post-nav">
+
+	<a class="prev-post" href="http://pruhnuhv.github.io/blog/gpio-2/">
+		<img class="icon-text" src="/img/prev.svg"/>Testing - GPIO II</a>
+
+
+	<a class="next-post" href="http://pruhnuhv.github.io/blog/testing-spi/">Testing - SPI<img class="icon-text" src="/img/next.svg"/>
+	</a>
+
+</nav>
+
+
+
+
+	
+
+<script src="https://utteranc.es/client.js"
+        repo=""
+        issue-term="url"
+        label=""
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+
+	<div id="disqus_thread" class="no-print"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = '';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+			<hr class="sep" />
+		</main>
+		<footer class="container no-print">
+			<div class="u-footer">
+				
+<a href="mailto:dangipranav@gmail.com"><img class="icon-social" src="/img/email.svg" alt="Email Me!"/></a>
+
+
+<a href="https://github.com/pruhnuhv/"><img class="icon-social" src="/img/github.svg" alt="Github"/></a>
+
+
+<a href="https://twitter.com/qwtfpd"><img class="icon-social" src="/img/twitter.svg" alt="Twitter"/></a>
+
+
+
+				<p>
+					
+					<a href="#brand">
+						<img class="icon-text" src="/img/toup.svg" alt="Back To Top"/>
+						<span>Back to Top</span>
+					</a>
+					
+				</p>
+			</div>
+		</footer>
+		
+	</body>
+</html>
+

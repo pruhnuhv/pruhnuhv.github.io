@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="generator" content="Hugo 0.83.1" />
+		<title>Waf And Autoconf - Pranav Dangi</title>
+
+		<meta name="description" content="Autoconf:  The Autoconf Build for the master branch was failing because of the absence of the rtems_bsdnet.h file and I had to disable networking (&ndash;disable-networking) while building the BSP, after which I was able to build the master Branch BSP successfully.
+Well, funny enough, using our temporary patch from my previous post, I was able to get the BSP to boot and bring the console up when built with Autoconf.">
+
+
+		
+	
+		
+
+
+
+
+<link rel="stylesheet" href="/css/ui.css">
+
+	
+		
+
+		<link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono|Lato|Raleway">
+
+		
+	</head>
+
+<body>
+<header class="container no-print">
+	<div class="u-header">
+		<nav class="bar">
+	<ul><li>
+			<a href="/">
+				<img class="icon-text" src="/img/prev.svg"/>
+			</a>
+		</li><li><a href="/about">About</a></li><li><a href="/blog">Blog</a></li></ul>
+</nav>
+
+	</div>
+</header>
+<main class="container">
+
+<article>
+	<header><hgroup id="brand">
+	<h1>Waf And Autoconf</h1>
+	<h5>
+		
+		<time datetime="2021-06-30 00:00:50 &#43;0530 IST">Jun 30, 2021</time>
+		<span class="no-print">
+			<span>
+	</h5>
+	
+</hgroup>
+<hr class="sep" />
+</header>
+	<p><b> Autoconf: </b>
+The Autoconf Build for the master branch was failing because of the absence of the rtems_bsdnet.h file and I had to disable networking (&ndash;disable-networking) while building the BSP, after which I was able to build the master Branch BSP successfully.</p>
+<p>Well, funny enough, using our temporary patch from my previous post, I was able to get the BSP to boot and bring the console up when built with Autoconf. I had spent the past few days trying to fix and patch the console, vector tables, mmu and the startup code, in the end the issue turned out to be related to the Build System :)</p>
+<p><b>Waf: </b>
+We were so close yet so far, to get the Basic RPi BSPs to boot it was still essential to get the waf Build of the same to work. The waf build wasn&rsquo;t failing, I tried out a lot of options in the config.ini, the build was working, but the BSP itself wasn&rsquo;t booting on actual Hardware.</p>
+<p>Eventually, I compared the bspopts.h and cpuopts.h files in the builds of both of the BSPs.</p>
+<pre><code>#define BSP_FDT_BLOB_COPY_TO_READ_ONLY_LOAD_AREA 1
+ 
+#define BSP_FDT_BLOB_READ_ONLY 1
+
+#define BSP_START_COPY_FDT_FROM_U_BOOT 1
+
+#define BSP_FDT_BLOB_SIZE_MAX 262144
+
+</code></pre><p>These were the 4 defines that were missing from the waf build but were present in the Autoconf build.
+These yaml files were to be added to resolve this issue:</p>
+<pre><code>- role: build-dependency
+  uid: optfdtcpyro
+- role: build-dependency
+  uid: optfdtmxsz
+- role: build-dependency
+  uid: optfdtro
+- role: build-dependency
+  uid: optfdtuboot
+</code></pre><p>The files just had to be moved out from the BSP specific directories to the shared directory.</p>
+<p><b></b>
+<b><b> Finally, both the Raspberry Pi BSPs in the master branch are working. </b></b></p>
+
+</article>
+<nav class="no-print post-nav">
+
+	<a class="prev-post" href="http://pruhnuhv.github.io/blog/bsp-startup-issues/">
+		<img class="icon-text" src="/img/prev.svg"/>BSP Startup issues</a>
+
+
+	<a class="next-post" href="http://pruhnuhv.github.io/blog/testing-gpio/">Testing - GPIO<img class="icon-text" src="/img/next.svg"/>
+	</a>
+
+</nav>
+
+
+
+
+	
+
+<script src="https://utteranc.es/client.js"
+        repo=""
+        issue-term="url"
+        label=""
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+
+	<div id="disqus_thread" class="no-print"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = '';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+			<hr class="sep" />
+		</main>
+		<footer class="container no-print">
+			<div class="u-footer">
+				
+<a href="mailto:dangipranav@gmail.com"><img class="icon-social" src="/img/email.svg" alt="Email Me!"/></a>
+
+
+<a href="https://github.com/pruhnuhv/"><img class="icon-social" src="/img/github.svg" alt="Github"/></a>
+
+
+<a href="https://twitter.com/qwtfpd"><img class="icon-social" src="/img/twitter.svg" alt="Twitter"/></a>
+
+
+
+				<p>
+					
+					<a href="#brand">
+						<img class="icon-text" src="/img/toup.svg" alt="Back To Top"/>
+						<span>Back to Top</span>
+					</a>
+					
+				</p>
+			</div>
+		</footer>
+		
+	</body>
+</html>
+

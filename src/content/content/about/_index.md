@@ -6,9 +6,8 @@ draft: true
 
 <p>
 
-I am a student researcher advised by Prof. [Tulika Mitra](https://www.comp.nus.edu.sg/~tulika/). 
-I like to work on Computer Architecture, VLSI Design, Circuits and Semiconductor Fabrication, Compilers and everything in between.
+My research interests span VLSI design, computer architecture, circuits, compilers and everything in between. I am currently advised by Prof. [Tulika Mitra](https://www.comp.nus.edu.sg/~tulika/). 
 
-Previously, I have worked in the Interconnects IP Group at Intel and with Prof. [Abhijit Asati](https://www.bits-pilani.ac.in/Pilani/abhijitasati/Profile) at BITS Pilani, India.
+Previously, I have been a GSoC Fellow with [RTEMS](https://www.rtems.org/), and I have worked in the Interconnects IP Group at Intel and with Prof. [Abhijit Asati](https://www.bits-pilani.ac.in/Pilani/abhijitasati/Profile) at BITS Pilani, India.
 
 </p>
